@@ -23,6 +23,8 @@ import {
     X,
 } from 'lucide-react';
 import { useAuth } from '../auth';
+
+const crestUrl = `${import.meta.env.BASE_URL}mbdk-crest.png`;
 import type { UserRole } from '../types';
 
 const roleNames: Record<UserRole, string> = {
@@ -74,7 +76,7 @@ export function AppShell({ children, title, subtitle }: { children: ReactNode; t
     const sidebar = (
         <div className="flex h-full flex-col bg-ink-900">
             <div className={`flex h-18 items-center border-b border-slate-800 px-4 ${collapsed ? 'justify-center' : 'gap-3'}`}>
-                <img alt="Jata MBDK" className="h-10 w-9 object-contain" src="/mbdk-crest.png" />
+                <img alt="Jata MBDK" className="h-10 w-9 object-contain" src={crestUrl} />
                 {!collapsed && (
                     <div className="min-w-0">
                         <p className="truncate text-xs font-bold text-white">Pemantauan Pintar MBDK</p>

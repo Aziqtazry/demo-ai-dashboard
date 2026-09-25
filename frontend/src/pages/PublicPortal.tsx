@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+
+const crestUrl = `${import.meta.env.BASE_URL}mbdk-crest.png`;
 import { AlertTriangle, ArrowRight, Banknote, CalendarDays, CarFront, ClipboardList, CloudSun, CreditCard, Landmark, MapPinned, MessageSquareText, ParkingCircle, ShieldCheck } from 'lucide-react';
 
 const services = [
@@ -16,7 +18,7 @@ export function PublicPortal() {
             <header className="border-b-4 border-civic-700 bg-white">
                 <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3">
                     <div className="flex items-center gap-3">
-                        <img alt="Jata MBDK" className="h-12 w-10 object-contain" src="/mbdk-crest.png" />
+                        <img alt="Jata MBDK" className="h-12 w-10 object-contain" src={crestUrl} />
                         <div><p className="text-xs font-bold text-slate-900">Majlis Bandaraya Diraja Klang</p><p className="text-[10px] text-slate-500">Portal Bandar Pintar · Maklumat untuk warga Klang</p></div>
                     </div>
                     <Link className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:border-civic-700 hover:text-civic-700" to="/login">

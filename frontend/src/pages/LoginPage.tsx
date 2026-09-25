@@ -4,6 +4,8 @@ import { Building2, Eye, EyeOff, KeyRound, ShieldCheck, Siren, UserCog, Users } 
 import { useAuth } from '../auth';
 import type { UserRole } from '../types';
 
+const crestUrl = `${import.meta.env.BASE_URL}mbdk-crest.png`;
+
 const personas = [
     { role: 'it' as const, label: 'Jabatan Teknologi Maklumat', detail: 'Akses penuh · pentadbiran · konfigurasi integrasi', icon: UserCog },
     { role: 'management' as const, label: 'Pengurusan Atasan', detail: 'Dashboard eksekutif · laporan · analitik', icon: Building2 },
@@ -32,7 +34,7 @@ export function LoginPage() {
             <section className="relative hidden overflow-hidden border-r border-slate-800 lg:flex lg:flex-col lg:items-center lg:justify-center">
                 <div className="absolute inset-0 soft-grid opacity-50" />
                 <div className="relative flex max-w-md flex-col items-center px-10 text-center">
-                    <div className="rounded-3xl border border-amber-400/20 bg-white p-5 shadow-2xl"><img alt="Jata MBDK" className="h-40 w-32 object-contain" src="/mbdk-crest.png" /></div>
+                    <div className="rounded-3xl border border-amber-400/20 bg-white p-5 shadow-2xl"><img alt="Jata MBDK" className="h-40 w-32 object-contain" src={crestUrl} /></div>
                     <h1 className="mt-7 text-3xl font-bold tracking-tight text-white">Dashboard Pemantauan Pintar MBDK</h1>
                     <p className="mt-3 text-sm text-slate-400">Pemantauan bandar bersepadu untuk Bandaraya Diraja Klang</p>
                     <div className="mt-8 flex gap-5 text-slate-600"><ShieldCheck size={20} /><KeyRound size={20} /><Users size={20} /></div>
@@ -41,7 +43,7 @@ export function LoginPage() {
 
             <section className="flex items-center justify-center px-5 py-12">
                 <form className="w-full max-w-lg" onSubmit={submit}>
-                    <div className="mb-8 flex items-center gap-3 lg:hidden"><img alt="Jata MBDK" className="h-14 w-12 object-contain" src="/mbdk-crest.png" /><div><p className="font-bold text-white">Pemantauan Pintar MBDK</p><p className="text-xs text-slate-500">Bandaraya Diraja Klang</p></div></div>
+                    <div className="mb-8 flex items-center gap-3 lg:hidden"><img alt="Jata MBDK" className="h-14 w-12 object-contain" src={crestUrl} /><div><p className="font-bold text-white">Pemantauan Pintar MBDK</p><p className="text-xs text-slate-500">Bandaraya Diraja Klang</p></div></div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-400">Akses Kakitangan</p>
                     <h2 className="mt-2 text-3xl font-bold text-white">{step === 'credentials' ? 'Log masuk' : 'Pengesahan MFA'}</h2>
                     <p className="mt-2 text-sm text-slate-500">{step === 'credentials' ? 'Masukkan kelayakan anda untuk meneruskan.' : 'Masukkan kod 6 digit yang dihantar ke peranti berdaftar.'}</p>
