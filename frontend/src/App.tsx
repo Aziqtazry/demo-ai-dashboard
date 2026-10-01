@@ -6,6 +6,7 @@ import type { UserRole } from './types';
 const PublicPortal = lazy(() => import('./pages/PublicPortal').then((module) => ({ default: module.PublicPortal })));
 const LoginPage = lazy(() => import('./pages/LoginPage').then((module) => ({ default: module.LoginPage })));
 const DashboardPage = lazy(() => import('./pages/DashboardPage').then((module) => ({ default: module.DashboardPage })));
+const CommandCentrePage = lazy(() => import('./pages/ControlRoomPage').then((module) => ({ default: module.CommandCentrePage })));
 const ExecutivePage = lazy(() => import('./pages/ExecutivePage').then((module) => ({ default: module.ExecutivePage })));
 const CctvPage = lazy(() => import('./pages/OperationalPages').then((module) => ({ default: module.CctvPage })));
 const DronePage = lazy(() => import('./pages/OperationalPages').then((module) => ({ default: module.DronePage })));
@@ -40,6 +41,8 @@ function AppRoutes() {
                 <Route element={<PublicPortal />} path="/" />
                 <Route element={<LoginPage />} path="/login" />
                 <Route element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} path="/dashboard" />
+                <Route element={<ProtectedRoute><CommandCentrePage /></ProtectedRoute>} path="/command-centre" />
+                <Route element={<Navigate replace to="/command-centre" />} path="/control-room" />
                 <Route element={<ProtectedRoute><ExecutivePage /></ProtectedRoute>} path="/executive" />
                 <Route element={<ProtectedRoute roles={['enforcement', 'it']}><CctvPage /></ProtectedRoute>} path="/cctv" />
                 <Route element={<ProtectedRoute roles={['enforcement', 'it']}><DronePage /></ProtectedRoute>} path="/drone" />

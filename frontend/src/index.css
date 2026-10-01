@@ -77,6 +77,44 @@ select:focus-visible {
     color: #172033;
 }
 
+#root.route-pullback {
+    animation: route-pullback 220ms cubic-bezier(0.4, 0, 1, 1) both;
+    transform-origin: center top;
+}
+
+#root.route-pullin {
+    animation: route-pullin 450ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    transform-origin: center top;
+}
+
+@keyframes route-pullback {
+    from {
+        filter: blur(0);
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        filter: blur(3px);
+        opacity: 0.35;
+        transform: scale(0.94);
+    }
+}
+
+@keyframes route-pullin {
+    from {
+        filter: blur(3px);
+        opacity: 0.35;
+        transform: scale(1.055);
+    }
+
+    to {
+        filter: blur(0);
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

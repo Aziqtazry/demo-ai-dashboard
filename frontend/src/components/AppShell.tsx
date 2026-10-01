@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
     Activity,
+    ArrowLeft,
     Bell,
     BrainCircuit,
     Camera,
@@ -14,6 +15,7 @@ import {
     LogOut,
     Map,
     Menu,
+    MonitorUp,
     ParkingCircle,
     Settings,
     ShieldCheck,
@@ -56,6 +58,7 @@ export function AppShell({ children, title, subtitle }: { children: ReactNode; t
     const [collapsed, setCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [clock, setClock] = useState(new Date());
+    const [isNavigating, setIsNavigating] = useState(false);
 
     useEffect(() => {
         setMobileOpen(false);
@@ -72,6 +75,33 @@ export function AppShell({ children, title, subtitle }: { children: ReactNode; t
         signOut();
         navigate('/login');
     }
+
+    function navigateWithPullEffect(path: string) {
+        if (isNavigating) {
+            return;
+        }
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            navigate(path);
+            return;
+        }
+
+        const root = document.getElementById('root');
+        setIsNavigating(true);
+        root?.classList.remove('route-pullin');
+        root?.classList.add('route-pullback');
+
+        window.setTimeout(() => {
+            navigate(path);
+            root?.classList.remove('route-pullback');
+            root?.classList.add('route-pullin');
+
+            window.setTimeout(() => root?.classList.remove('route-pullin'), 450);
+        }, 220);
+    }
+
+    const isDashboard = location.pathname === '/dashboard';
+    const isCommandCentre = location.pathname === '/command-centre';
 
     const sidebar = (
         <div className="flex h-full flex-col bg-ink-900">
@@ -136,8 +166,8 @@ export function AppShell({ children, title, subtitle }: { children: ReactNode; t
             )}
 
             <div className={collapsed ? 'lg:pl-18' : 'lg:pl-64'}>
-                <header className="sticky top-0 z-30 flex h-18 items-center justify-between gap-3 border-b border-slate-800 bg-ink-950/95 px-4 backdrop-blur md:px-6">
-                    <div className="flex min-w-0 items-center gap-3">
+                <header className="sticky top-0 z-30 flex min-h-18 flex-wrap items-center justify-between gap-2 border-b border-slate-800 bg-ink-950/95 px-4 py-2 backdrop-blur md:px-6 xl:grid xl:h-18 xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] xl:gap-3 xl:py-0">
+                    <div className="flex min-w-0 items-center gap-3 xl:justify-self-start">
                         <button aria-label="Buka menu" className="rounded-lg border border-slate-800 p-2 text-slate-400 lg:hidden" onClick={() => setMobileOpen(true)} type="button"><Menu size={18} /></button>
                         <div className="min-w-0">
                             <h1 className="truncate text-sm font-semibold text-white md:text-base">{title}</h1>
@@ -145,12 +175,25 @@ export function AppShell({ children, title, subtitle }: { children: ReactNode; t
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2 md:gap-3">
+                    {(isDashboard || isCommandCentre) && (
+                        <button
+                            aria-label={isDashboard ? 'Buka Command Centre' : 'Kembali ke Dashboard Utama'}
+                            className="order-3 mx-auto flex w-full items-center justify-center gap-2 rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-cyan-200 shadow-[0_0_24px_rgba(39,184,255,.08)] transition hover:border-cyan-300/60 hover:bg-cyan-400/15 hover:text-white disabled:pointer-events-none disabled:opacity-60 xl:order-none xl:w-auto"
+                            disabled={isNavigating}
+                            onClick={() => navigateWithPullEffect(isDashboard ? '/command-centre' : '/dashboard')}
+                            type="button"
+                        >
+                            {isCommandCentre ? <ArrowLeft size={14} /> : <MonitorUp size={14} />}
+                            {isDashboard ? 'Command Centre' : 'Kembali ke Dashboard'}
+                        </button>
+                    )}
+
+                    <div className="flex items-center gap-2 md:gap-3 xl:justify-self-end">
                         <div className="hidden items-center gap-2 border-r border-slate-800 pr-3 text-[10px] text-slate-400 sm:flex">
                             <CloudSun size={16} className="text-cyan-400" />
                             <span>28°C · Klang</span>
                         </div>
-                        <div className="hidden text-right text-[10px] md:block">
+                        <div className="hidden text-right text-[10px] 2xl:block">
                             <p className="font-semibold tabular-nums text-slate-200">{clock.toLocaleTimeString('ms-MY')}</p>
                             <p className="text-slate-600">{clock.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
                         </div>
@@ -160,7 +203,7 @@ export function AppShell({ children, title, subtitle }: { children: ReactNode; t
                             <option value="enforcement">Penguatkuasaan</option>
                             <option value="it">Pentadbir IT</option>
                         </select>
-                        <div className="hidden items-center gap-2 border-l border-slate-800 pl-3 xl:flex">
+                        <div className="hidden items-center gap-2 border-l border-slate-800 pl-3 2xl:flex">
                             <div className="flex size-8 items-center justify-center rounded-full bg-cyan-500/15 text-xs font-bold text-cyan-300">AR</div>
                             <div className="text-[10px]"><p className="font-semibold text-slate-200">Ahmad Razak</p><p className="text-slate-600">{roleNames[role]}</p></div>
                         </div>

@@ -27,6 +27,27 @@ test('staff can complete the demo MFA flow and open the dashboard', async ({ pag
     await page.screenshot({ fullPage: true, path: testInfo.outputPath('dashboard.png') });
 });
 
+test('command centre opens from the dashboard header and presents the operational wallboard', async ({ page }, testInfo) => {
+    await page.goto('/login');
+    await page.getByRole('button', { name: /Jabatan Teknologi Maklumat/ }).click();
+    await page.getByRole('button', { name: 'Teruskan dengan MFA' }).click();
+    await page.getByRole('button', { name: 'Sahkan & buka dashboard' }).click();
+    await expect(page.getByRole('navigation', { name: 'Navigasi modul' }).getByText('Command Centre')).toHaveCount(0);
+    await page.getByRole('button', { name: 'Buka Command Centre' }).click();
+
+    await expect(page).toHaveURL(/\/command-centre$/);
+    await expect(page.getByRole('heading', { name: 'Command Centre' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Peta GIS Bandar Klang' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Paparan CCTV Langsung' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Status Sistem Penting' })).toBeVisible();
+    await expect(page.locator('body')).not.toHaveCSS('overflow-x', 'scroll');
+
+    await page.screenshot({ fullPage: true, path: testInfo.outputPath('command-centre.png') });
+
+    await page.getByRole('button', { name: 'Kembali ke Dashboard Utama' }).click();
+    await expect(page).toHaveURL(/\/dashboard$/);
+});
+
 test('IT persona can navigate every protected URS module', async ({ page }) => {
     await page.goto('/login');
     await page.getByRole('button', { name: /Jabatan Teknologi Maklumat/ }).click();
@@ -34,6 +55,7 @@ test('IT persona can navigate every protected URS module', async ({ page }) => {
     await page.getByRole('button', { name: 'Sahkan & buka dashboard' }).click();
 
     const modules = [
+        ['/command-centre', 'Command Centre'],
         ['/executive', 'Dashboard Eksekutif'],
         ['/cctv', 'Pemantauan CCTV & Amaran AI'],
         ['/drone', 'Pemantauan Operasi Dron'],
