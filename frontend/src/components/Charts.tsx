@@ -2,8 +2,8 @@ import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Too
 import { trendData } from '../data/mock';
 
 const tooltipStyle = {
-    background: '#07101f',
-    border: '1px solid #2a3b55',
+    background: 'var(--color-ink-900)',
+    border: '1px solid var(--panel-border, #2a3b55)',
     borderRadius: '8px',
     fontSize: '11px',
 };

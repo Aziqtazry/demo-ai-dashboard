@@ -42,16 +42,16 @@ export function MapVisual({ compact = false }: { compact?: boolean }) {
                 />
             ))}
 
-            <div className="absolute left-3 top-3 flex items-center gap-2 rounded-lg border border-slate-700/80 bg-ink-900/90 p-2">
-                <Search size={14} className="text-slate-500" />
-                <span className="text-[11px] text-slate-400">Cari lokasi atau koordinat</span>
+            <div className="absolute left-3 top-3 flex items-center gap-2 rounded-lg border border-slate-700/80 light:border-slate-300/80 bg-ink-900/90 p-2">
+                <Search size={14} className="text-slate-500 light:text-slate-600" />
+                <span className="text-[11px] text-slate-400 light:text-slate-600">Cari lokasi atau koordinat</span>
             </div>
             <div className="absolute bottom-3 left-3 flex gap-2">
-                <button className="rounded-md border border-slate-700 bg-ink-900/90 p-2 text-slate-300" type="button"><Layers3 size={14} /></button>
-                <button className="rounded-md border border-slate-700 bg-ink-900/90 p-2 text-slate-300" type="button"><LocateFixed size={14} /></button>
+                <button className="rounded-md border border-slate-700 light:border-slate-300 bg-ink-900/90 p-2 text-slate-300 light:text-slate-700" type="button"><Layers3 size={14} /></button>
+                <button className="rounded-md border border-slate-700 light:border-slate-300 bg-ink-900/90 p-2 text-slate-300 light:text-slate-700" type="button"><LocateFixed size={14} /></button>
             </div>
-            <div className="absolute bottom-3 right-3 flex items-center gap-2 rounded-md border border-slate-700 bg-ink-900/90 px-2 py-1.5">
-                <Video size={12} className="text-cyan-400" />
+            <div className="absolute bottom-3 right-3 flex items-center gap-2 rounded-md border border-slate-700 light:border-slate-300 bg-ink-900/90 px-2 py-1.5">
+                <Video size={12} className="text-cyan-400 light:text-cyan-700" />
                 <StatusBadge tone="normal">208 aktif</StatusBadge>
                 <StatusBadge tone="critical">3 amaran</StatusBadge>
             </div>

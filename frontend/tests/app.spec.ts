@@ -85,3 +85,52 @@ test('management persona is redirected away from restricted modules', async ({ p
     await expect(page).toHaveURL(/\/dashboard$/);
     await expect(page.getByRole('heading', { name: 'Dashboard Pemantauan Bersepadu' })).toBeVisible();
 });
+
+test('staff can switch themes and retain their choice across navigation and reloads', async ({ page }, testInfo) => {
+    await page.goto('/login');
+    await page.getByRole('button', { name: /Jabatan Teknologi Maklumat/ }).click();
+    await page.getByRole('button', { name: 'Teruskan dengan MFA' }).click();
+    await page.getByRole('button', { name: 'Sahkan & buka dashboard' }).click();
+
+    const shell = page.locator('.app-shell');
+    await expect(shell).toHaveCSS('background-color', 'rgb(5, 11, 22)');
+    await page.getByRole('button', { name: 'Aktifkan light mode' }).click();
+    await expect(shell).toHaveCSS('background-color', 'rgb(241, 245, 249)');
+    await expect(page.getByRole('heading', { name: 'Dashboard Pemantauan Bersepadu' })).toHaveCSS('color', 'oklch(0.208 0.042 265.755)');
+    await page.reload();
+    await expect(page.getByRole('button', { name: 'Aktifkan dark mode' })).toHaveAttribute('aria-pressed', 'true');
+    await page.screenshot({ fullPage: true, animations: 'disabled', path: testInfo.outputPath('dashboard-light.png') });
+
+    await page.getByRole('button', { name: 'Buka Command Centre' }).click();
+    await expect(page).toHaveURL(/\/command-centre$/);
+    await expect(shell).toHaveCSS('background-color', 'rgb(241, 245, 249)');
+    await page.screenshot({ fullPage: true, animations: 'disabled', path: testInfo.outputPath('command-centre-light.png') });
+    await page.getByRole('button', { name: 'Aktifkan dark mode' }).click();
+    await expect(shell).toHaveCSS('background-color', 'rgb(5, 11, 22)');
+    await page.reload();
+    await expect(page.getByRole('button', { name: 'Aktifkan light mode' })).toHaveAttribute('aria-pressed', 'false');
+});
+
+test('header keeps the theme toggle between Command Centre and weather without overflow', async ({ page }, testInfo) => {
+    await page.goto('/login');
+    await page.getByRole('button', { name: /Jabatan Teknologi Maklumat/ }).click();
+    await page.getByRole('button', { name: 'Teruskan dengan MFA' }).click();
+    await page.getByRole('button', { name: 'Sahkan & buka dashboard' }).click();
+
+    const widths = testInfo.project.name.startsWith('mobile') ? [320, 393, 768] : [1280, 1536, 1920];
+    for (const width of widths) {
+        await page.setViewportSize({ width, height: 900 });
+        const command = await page.getByRole('button', { name: 'Buka Command Centre' }).boundingBox();
+        const toggle = await page.getByRole('button', { name: 'Aktifkan light mode' }).boundingBox();
+        expect(command).not.toBeNull();
+        expect(toggle).not.toBeNull();
+        expect(command!.x + command!.width).toBeLessThanOrEqual(toggle!.x);
+        if (width >= 1280) {
+            const weather = await page.locator('header').getByText(/28.*Klang/).boundingBox();
+            expect(weather).not.toBeNull();
+            expect(toggle!.x + toggle!.width).toBeLessThanOrEqual(weather!.x);
+            expect(Math.abs(command!.y - toggle!.y)).toBeLessThan(8);
+        }
+        expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    }
+});
