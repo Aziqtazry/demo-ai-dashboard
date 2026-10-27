@@ -9,7 +9,6 @@ import {
     Gauge,
     Layers3,
     Navigation,
-    Play,
     RadioTower,
     Route,
     Satellite,
@@ -18,18 +17,18 @@ import {
     Siren,
     TrafficCone,
     Truck,
-    Video,
     Waves,
     X,
     Zap,
 } from 'lucide-react';
+import { CctvVideo } from '../components/CctvVideo';
 import { AppShell } from '../components/AppShell';
 import { MapVisual } from '../components/MapVisual';
 import { Panel, SourceFooter, StatusBadge } from '../components/ui';
 import { alerts, cameraFeeds, parkingZones } from '../data/mock';
 
 export function CctvPage() {
-    const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
+    const [selectedCamera, setSelectedCamera] = useState<{ index: number; name: string } | null>(null);
     const [grid, setGrid] = useState('4x4');
 
     return (
@@ -42,8 +41,8 @@ export function CctvPage() {
 
                 <div className={`grid gap-2 ${grid === '2x2' ? 'grid-cols-1 md:grid-cols-2' : grid === '3x3' ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4'}`}>
                     {[...cameraFeeds, ...cameraFeeds].slice(0, grid === '2x2' ? 4 : grid === '3x3' ? 9 : grid === '8x8' ? 16 : 12).map(([id, name, status], index) => (
-                        <button className="group relative h-44 overflow-hidden rounded-lg border border-slate-700 light:border-slate-300 bg-slate-950 light:bg-slate-100 text-left hover:border-cyan-500/60" key={`${id}-${index}`} onClick={() => setSelectedCamera(`${id}-${index}`)} type="button">
-                            <div className="absolute inset-0 soft-grid opacity-70" /><div className="absolute inset-0 flex items-center justify-center"><Video className="text-slate-700 group-hover:text-cyan-700" size={38} /></div>
+                        <button className="group relative h-44 overflow-hidden rounded-lg border border-slate-700 light:border-slate-300 bg-slate-950 light:bg-slate-100 text-left hover:border-cyan-500/60" key={`${id}-${index}`} aria-label={`Buka kamera ${name}`} onClick={() => setSelectedCamera({ index, name })} type="button">
+                            <CctvVideo index={index} name={name} />
                             <div className="absolute left-2 top-2 flex items-center gap-2"><StatusBadge tone={status}>{status === 'normal' ? 'Live' : status}</StatusBadge>{index === 2 && <StatusBadge tone="warning">AI: kenderaan</StatusBadge>}</div>
                             <div className="absolute inset-x-0 bottom-0 bg-ink-950/95 p-3"><p className="truncate text-[11px] font-semibold text-white light:text-slate-900">{name}</p><p className="mt-1 text-[9px] text-slate-500 light:text-slate-600">{id} · 1080p · SIMULASI</p></div>
                         </button>
@@ -55,7 +54,7 @@ export function CctvPage() {
                 </Panel>
             </div>
 
-            {selectedCamera && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-5"><div className="w-full max-w-5xl overflow-hidden rounded-xl border border-slate-700 light:border-slate-300 bg-ink-900"><header className="flex items-center justify-between border-b border-slate-700 light:border-slate-300 px-4 py-3"><div><p className="text-sm font-semibold text-white light:text-slate-900">Dewan Hamzah · Paparan penuh</p><p className="mt-1 text-[10px] text-slate-500 light:text-slate-600">SIMULASI · DSS Pro · 1080p</p></div><button aria-label="Tutup paparan" onClick={() => setSelectedCamera(null)} type="button"><X size={20} /></button></header><div className="soft-grid flex aspect-video items-center justify-center"><Play className="text-cyan-300 light:text-cyan-700" size={60} /></div><div className="flex flex-wrap items-center gap-3 p-4"><button className="rounded-lg bg-blue-600 px-3 py-2 text-[10px] font-semibold text-white" type="button">Main semula</button><button className="rounded-lg border border-slate-700 light:border-slate-300 px-3 py-2 text-[10px] font-semibold text-slate-300 light:text-slate-700" type="button">Tanda peristiwa</button><div className="ml-auto text-[10px] text-slate-500 light:text-slate-600">Latensi simulasi: 1.2s</div></div></div></div>}
+            {selectedCamera && <div aria-label="Paparan penuh CCTV" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-5" role="dialog"><div className="w-full max-w-5xl overflow-hidden rounded-xl border border-slate-700 light:border-slate-300 bg-ink-900"><header className="flex items-center justify-between border-b border-slate-700 light:border-slate-300 px-4 py-3"><div><p className="text-sm font-semibold text-white light:text-slate-900">{selectedCamera.name} · Paparan penuh</p><p className="mt-1 text-[10px] text-slate-500 light:text-slate-600">SIMULASI · DSS Pro · 1080p</p></div><button aria-label="Tutup paparan" onClick={() => setSelectedCamera(null)} type="button"><X size={20} /></button></header><div className="relative aspect-video"><CctvVideo index={selectedCamera.index} name={selectedCamera.name} /></div><div className="flex flex-wrap items-center gap-3 p-4"><StatusBadge tone="normal">LIVE · DEMO</StatusBadge><button className="rounded-lg border border-slate-700 light:border-slate-300 px-3 py-2 text-[10px] font-semibold text-slate-300 light:text-slate-700" type="button">Tanda peristiwa</button><div className="ml-auto text-[10px] text-slate-500 light:text-slate-600">Latensi simulasi: 1.2s</div></div></div></div>}
         </AppShell>
     );
 }

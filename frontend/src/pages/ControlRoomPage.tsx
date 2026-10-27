@@ -21,6 +21,7 @@ import {
     Waves,
     Wifi,
 } from 'lucide-react';
+import { CctvVideo } from '../components/CctvVideo';
 import { AppShell } from '../components/AppShell';
 import { MapVisual } from '../components/MapVisual';
 import { cameraFeeds, integrations, parkingZones, smartDomains } from '../data/mock';
@@ -83,16 +84,7 @@ function MetricTile({ label, value, detail, icon: Icon, tone }: (typeof headline
 function CameraTile({ name, index }: { name: string; index: number }) {
     return (
         <div className="relative min-h-24 overflow-hidden bg-[#07111e]">
-            <svg aria-hidden="true" className="absolute inset-0 h-full w-full" viewBox="0 0 240 120" preserveAspectRatio="none">
-                <defs>
-                    <linearGradient id={`road-${index}`} x1="0" y1="0" x2="0" y2="1"><stop stopColor="#1b3449" /><stop offset="1" stopColor="#07111e" /></linearGradient>
-                </defs>
-                <rect width="240" height="120" fill="#0b2132" />
-                <path d="M80 120 L112 38 L132 38 L177 120Z" fill={`url(#road-${index})`} />
-                <path d="M121 48 L126 48 M117 61 L130 61 M111 80 L138 80 M102 106 L151 106" stroke="#d8d09c" strokeWidth="2" strokeDasharray="6 7" opacity=".6" />
-                <path d="M0 76 L102 51 M240 79 L139 52" stroke="#233f4f" strokeWidth="5" />
-                {Array.from({ length: 5 }, (_, carIndex) => <rect key={carIndex} x={99 + carIndex * 12} y={70 + (carIndex % 2) * 18} width="9" height="5" rx="1" fill={carIndex === 2 ? '#f59e0b' : '#7dd3fc'} />)}
-            </svg>
+            <CctvVideo index={index} name={name} />
             <span className="absolute left-1.5 top-1.5 flex items-center gap-1 rounded bg-emerald-500/85 px-1.5 py-0.5 text-[7px] font-bold text-white"><Radio size={7} /> LIVE</span>
             <div className="absolute inset-x-0 bottom-0 bg-slate-950/85 light:bg-slate-100/85 px-2 py-1 text-[8px] text-slate-300 light:text-slate-700">{name}</div>
         </div>

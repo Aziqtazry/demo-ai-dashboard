@@ -134,3 +134,41 @@ test('header keeps the theme toggle between Command Centre and weather without o
         expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
     }
 });
+
+test('CCTV demo feeds autoplay, loop and keep playing in every CCTV view', async ({ page }, testInfo) => {
+    test.setTimeout(60_000);
+    await page.goto('/login');
+    await page.getByRole('button', { name: /Jabatan Teknologi Maklumat/ }).click();
+    await page.getByRole('button', { name: 'Teruskan dengan MFA' }).click();
+    await page.getByRole('button', { name: 'Sahkan & buka dashboard' }).click();
+
+    for (const path of ['/dashboard', '/command-centre', '/cctv']) {
+        await page.goto(path);
+        const videos = page.locator('video');
+        for (const index of [0, 1]) {
+            const video = videos.nth(index);
+            await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.readyState)).toBeGreaterThanOrEqual(2);
+            await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.currentTime)).toBeGreaterThan(0);
+            await expect(video).toHaveAttribute('src', `/cctv_demo/cctv_demo_${index + 1}_edited.mp4`);
+            expect(await video.evaluate((element: HTMLVideoElement) => element.controls)).toBe(false);
+            expect(await video.evaluate((element: HTMLVideoElement) => element.muted)).toBe(true);
+        }
+        const first = videos.first();
+        await first.evaluate((video: HTMLVideoElement) => video.pause());
+        await expect.poll(() => first.evaluate((video: HTMLVideoElement) => video.paused)).toBe(false);
+        await first.evaluate((video: HTMLVideoElement) => { video.currentTime = video.duration - 0.25; });
+        await expect.poll(() => first.evaluate((video: HTMLVideoElement) => video.currentTime)).toBeLessThan(3);
+    }
+
+    const secondTile = page.getByRole('button', { name: /Buka kamera/ }).nth(1);
+    await secondTile.click();
+    const dialog = page.getByRole('dialog', { name: 'Paparan penuh CCTV' });
+    await expect(dialog).toContainText('Dewan Hamzah - Lobi');
+    const expanded = dialog.locator('video');
+    await expect(expanded).toHaveAttribute('src', '/cctv_demo/cctv_demo_2_edited.mp4');
+    await expect.poll(() => expanded.evaluate((video: HTMLVideoElement) => video.currentTime)).toBeGreaterThan(0);
+    await expect(dialog.getByRole('button', { name: 'Main semula' })).toHaveCount(0);
+    await page.screenshot({ path: testInfo.outputPath('cctv-demo.png') });
+    await dialog.getByRole('button', { name: 'Tutup paparan' }).click();
+    await expect(dialog).toHaveCount(0);
+});

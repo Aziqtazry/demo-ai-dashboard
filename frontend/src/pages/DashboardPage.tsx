@@ -1,5 +1,6 @@
 import { AlertTriangle, ArrowRight, Camera, CheckCircle2, CloudCog, Siren } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { CctvVideo } from '../components/CctvVideo';
 import { AppShell } from '../components/AppShell';
 import { MapVisual } from '../components/MapVisual';
 import { TrendChart, ZoneBarChart } from '../components/Charts';
@@ -24,8 +25,7 @@ export function DashboardPage() {
                         <div className="grid grid-cols-2 gap-px bg-slate-700/40 p-px">
                             {cameraFeeds.slice(0, 4).map(([id, name, status], index) => (
                                 <div className="relative h-[137px] overflow-hidden bg-slate-950 light:bg-slate-100" key={id}>
-                                    <div className="absolute inset-0 soft-grid opacity-70" />
-                                    <div className="absolute inset-0 flex items-center justify-center"><Camera className="text-slate-700" size={32} /></div>
+                                    <CctvVideo index={index} name={name} />
                                     <div className="absolute left-2 top-2"><StatusBadge tone={status}>{status === 'normal' ? 'Live' : status}</StatusBadge></div>
                                     <div className="absolute inset-x-0 bottom-0 bg-ink-950/90 p-2"><p className="truncate text-[10px] font-semibold text-slate-200 light:text-slate-800">{name}</p><p className="mt-0.5 text-[9px] text-slate-600 light:text-slate-500">{id} · SIMULASI {index + 1}</p></div>
                                 </div>
