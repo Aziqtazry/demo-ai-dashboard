@@ -4,7 +4,7 @@ import { CctvVideo } from '../components/CctvVideo';
 import { AppShell } from '../components/AppShell';
 import { MapVisual } from '../components/MapVisual';
 import { TrendChart, ZoneBarChart } from '../components/Charts';
-import { LiveBadge, MetricCard, Panel, SourceFooter, StatusBadge } from '../components/ui';
+import { MetricCard, Panel, SourceFooter, StatusBadge } from '../components/ui';
 import { alerts, cameraFeeds, cityStats, integrations } from '../data/mock';
 
 export function DashboardPage() {
@@ -17,9 +17,9 @@ export function DashboardPage() {
                 </div>
 
                 <div className="grid gap-4 xl:grid-cols-[1.6fr_.8fr]">
-                    <Panel action={<LiveBadge />} className="min-h-80" eyebrow="Peta GIS bersepadu" title="Situasi bandar semasa">
+                    <Panel action={<StatusBadge tone="info">Peta OSM</StatusBadge>} className="min-h-80" eyebrow="Peta GIS bersepadu" title="Situasi bandar semasa">
                         <MapVisual />
-                        <SourceFooter source="GES / iMAPS · 5 lapisan aktif" />
+                        <SourceFooter source="OpenStreetMap · GeoJSON tempatan" updated="Peta asas · tanpa data langsung" />
                     </Panel>
                     <Panel action={<Link className="text-[10px] font-semibold text-cyan-300 light:text-cyan-700" to="/cctv">Lihat semua</Link>} eyebrow="DSS Pro + SUK" title="Paparan CCTV langsung">
                         <div className="grid grid-cols-2 gap-px bg-slate-700/40 p-px">

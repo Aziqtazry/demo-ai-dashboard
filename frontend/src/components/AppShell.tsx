@@ -243,7 +243,7 @@ export function AppShell({ children, title, subtitle }: { children: ReactNode; t
                 </header>
                 <main className="p-4 md:p-6">{children}</main>
                 <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-800 light:border-slate-300 px-6 py-3 text-[9px] text-slate-600 light:text-slate-500">
-                    <span>Mockup demonstrasi · Semua data adalah sintetik</span>
+                    <span>Mockup demonstrasi · Data operasi sintetik · Peta berasaskan OpenStreetMap</span>
                     <span className="flex items-center gap-1"><ShieldCheck size={11} />URS MBDK/SEL/ET/URS/01</span>
                 </footer>
             </div>
