@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
-
 @theme {
     --font-sans: "Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif;
     --color-ink-950: #050b16;
@@ -63,13 +61,13 @@ select:focus-visible {
 }
 
 .panel {
-    border: 1px solid var(--panel-border, rgb(55 73 99 / 55%));
-    background: var(--panel-background, #0a1527);
+    border: 1px solid rgb(55 73 99 / 55%);
+    background: #0a1527;
     border-radius: 0.85rem;
 }
 
 .soft-grid {
-    background-color: var(--map-background, #081321);
+    background-color: #081321;
     background-image: linear-gradient(rgb(43 66 91 / 18%) 1px, transparent 1px), linear-gradient(90deg, rgb(43 66 91 / 18%) 1px, transparent 1px);
     background-size: 28px 28px;
 }
@@ -126,20 +124,4 @@ select:focus-visible {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
-}
-
-.app-shell {
-    color-scheme: dark;
-}
-
-.app-shell[data-theme="light"] {
-    color-scheme: light;
-    --color-ink-950: #f1f5f9;
-    --color-ink-900: #ffffff;
-    --color-ink-850: #f8fafc;
-    --color-ink-800: #e2e8f0;
-    --color-ink-750: #cbd5e1;
-    --panel-background: #ffffff;
-    --panel-border: #cbd5e1;
-    --map-background: #e8f0f5;
 }

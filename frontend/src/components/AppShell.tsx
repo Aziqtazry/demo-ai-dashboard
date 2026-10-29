@@ -16,8 +16,6 @@ import {
     Map,
     Menu,
     MonitorUp,
-    Moon,
-    Sun,
     ParkingCircle,
     Settings,
     ShieldCheck,
@@ -57,13 +55,6 @@ export function AppShell({ children, title, subtitle }: { children: ReactNode; t
     const { role, setRole, signOut } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-    const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-        try {
-            return localStorage.getItem('mbdk-theme') === 'light' ? 'light' : 'dark';
-        } catch {
-            return 'dark';
-        }
-    });
     const [collapsed, setCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [clock, setClock] = useState(new Date());
@@ -77,16 +68,6 @@ export function AppShell({ children, title, subtitle }: { children: ReactNode; t
         const timer = window.setInterval(() => setClock(new Date()), 1000);
         return () => window.clearInterval(timer);
     }, []);
-
-    function toggleTheme() {
-        const nextTheme = theme === 'dark' ? 'light' : 'dark';
-        setTheme(nextTheme);
-        try {
-            localStorage.setItem('mbdk-theme', nextTheme);
-        } catch {
-            // The theme remains usable when browser storage is unavailable.
-        }
-    }
 
     const visibleItems = navItems.filter((item) => (item.roles as readonly UserRole[]).includes(role));
 
@@ -124,24 +105,24 @@ export function AppShell({ children, title, subtitle }: { children: ReactNode; t
 
     const sidebar = (
         <div className="flex h-full flex-col bg-ink-900">
-            <div className={`flex h-18 items-center border-b border-slate-800 light:border-slate-300 px-4 ${collapsed ? 'justify-center' : 'gap-3'}`}>
+            <div className={`flex h-18 items-center border-b border-slate-800 px-4 ${collapsed ? 'justify-center' : 'gap-3'}`}>
                 <img alt="Jata MBDK" className="h-10 w-9 object-contain" src={crestUrl} />
                 {!collapsed && (
                     <div className="min-w-0">
-                        <p className="truncate text-xs font-bold text-white light:text-slate-900">Pemantauan Pintar MBDK</p>
-                        <p className="mt-0.5 truncate text-[9px] font-semibold uppercase tracking-[0.16em] text-cyan-400 light:text-cyan-700">Bandar Diraja Klang</p>
+                        <p className="truncate text-xs font-bold text-white">Pemantauan Pintar MBDK</p>
+                        <p className="mt-0.5 truncate text-[9px] font-semibold uppercase tracking-[0.16em] text-cyan-400">Bandar Diraja Klang</p>
                     </div>
                 )}
             </div>
 
             <nav aria-label="Navigasi modul" className="flex-1 overflow-y-auto p-2">
-                <p className={`px-2 pb-2 pt-3 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-600 light:text-slate-500 ${collapsed ? 'sr-only' : ''}`}>Modul</p>
+                <p className={`px-2 pb-2 pt-3 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-600 ${collapsed ? 'sr-only' : ''}`}>Modul</p>
                 <div className="flex flex-col gap-1">
                     {visibleItems.map((item) => {
                         const Icon = item.icon;
                         return (
                             <NavLink
-                                className={({ isActive }) => `flex items-center rounded-lg px-3 py-2.5 text-xs transition-colors ${collapsed ? 'justify-center' : 'gap-3'} ${isActive ? 'bg-cyan-500/15 font-semibold text-cyan-300 light:text-cyan-700 ring-1 ring-cyan-500/20' : 'text-slate-400 light:text-slate-600 hover:bg-slate-800/60 light:hover:bg-slate-100/60 hover:text-slate-100 light:hover:text-slate-900'}`}
+                                className={({ isActive }) => `flex items-center rounded-lg px-3 py-2.5 text-xs transition-colors ${collapsed ? 'justify-center' : 'gap-3'} ${isActive ? 'bg-cyan-500/15 font-semibold text-cyan-300 ring-1 ring-cyan-500/20' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-100'}`}
                                 key={item.path}
                                 title={collapsed ? item.label : undefined}
                                 to={item.path}
@@ -154,14 +135,14 @@ export function AppShell({ children, title, subtitle }: { children: ReactNode; t
                 </div>
             </nav>
 
-            <div className="border-t border-slate-800 light:border-slate-300 p-3">
+            <div className="border-t border-slate-800 p-3">
                 {!collapsed && (
-                    <div className="mb-3 rounded-lg border border-slate-800 light:border-slate-300 bg-slate-950/40 light:bg-slate-100/40 p-3">
-                        <div className="flex items-center justify-between text-[10px] text-slate-500 light:text-slate-600"><span>Kesihatan sistem</span><span className="text-emerald-400 light:text-emerald-700">12/14 normal</span></div>
-                        <div className="mt-2 h-1.5 rounded-full bg-slate-800 light:bg-slate-100"><div className="h-1.5 w-[86%] rounded-full bg-emerald-400" /></div>
+                    <div className="mb-3 rounded-lg border border-slate-800 bg-slate-950/40 p-3">
+                        <div className="flex items-center justify-between text-[10px] text-slate-500"><span>Kesihatan sistem</span><span className="text-emerald-400">12/14 normal</span></div>
+                        <div className="mt-2 h-1.5 rounded-full bg-slate-800"><div className="h-1.5 w-[86%] rounded-full bg-emerald-400" /></div>
                     </div>
                 )}
-                <button className={`flex w-full items-center rounded-lg px-3 py-2.5 text-xs text-slate-400 light:text-slate-600 hover:bg-slate-800 light:hover:bg-slate-100 hover:text-white light:hover:text-slate-900 ${collapsed ? 'justify-center' : 'gap-3'}`} onClick={handleSignOut} type="button">
+                <button className={`flex w-full items-center rounded-lg px-3 py-2.5 text-xs text-slate-400 hover:bg-slate-800 hover:text-white ${collapsed ? 'justify-center' : 'gap-3'}`} onClick={handleSignOut} type="button">
                     <LogOut size={15} />{!collapsed && 'Log keluar'}
                 </button>
             </div>
@@ -169,81 +150,68 @@ export function AppShell({ children, title, subtitle }: { children: ReactNode; t
     );
 
     return (
-        <div data-theme={theme} className="app-shell min-h-screen bg-ink-950 text-slate-200 light:text-slate-800">
-            <aside className={`fixed inset-y-0 left-0 z-40 hidden border-r border-slate-800 light:border-slate-300 lg:block ${collapsed ? 'w-18' : 'w-64'}`}>
+        <div className="min-h-screen bg-ink-950 text-slate-200">
+            <aside className={`fixed inset-y-0 left-0 z-40 hidden border-r border-slate-800 lg:block ${collapsed ? 'w-18' : 'w-64'}`}>
                 {sidebar}
-                <button aria-label={collapsed ? 'Buka bar sisi' : 'Kecilkan bar sisi'} className="absolute -right-3 top-24 rounded-full border border-slate-700 light:border-slate-300 bg-ink-800 p-1 text-slate-400 light:text-slate-600 hover:text-white light:hover:text-slate-900" onClick={() => setCollapsed((value) => !value)} type="button">
+                <button aria-label={collapsed ? 'Buka bar sisi' : 'Kecilkan bar sisi'} className="absolute -right-3 top-24 rounded-full border border-slate-700 bg-ink-800 p-1 text-slate-400 hover:text-white" onClick={() => setCollapsed((value) => !value)} type="button">
                     {collapsed ? <ChevronRight size={13} /> : <ChevronLeft size={13} />}
                 </button>
             </aside>
 
             {mobileOpen && (
                 <div className="fixed inset-0 z-50 bg-black/70 lg:hidden">
-                    <aside className="h-full w-72 border-r border-slate-800 light:border-slate-300">{sidebar}</aside>
-                    <button aria-label="Tutup menu" className="absolute right-4 top-4 rounded-lg border border-slate-700 light:border-slate-300 bg-ink-900 p-2" onClick={() => setMobileOpen(false)} type="button"><X size={18} /></button>
+                    <aside className="h-full w-72 border-r border-slate-800">{sidebar}</aside>
+                    <button aria-label="Tutup menu" className="absolute right-4 top-4 rounded-lg border border-slate-700 bg-ink-900 p-2" onClick={() => setMobileOpen(false)} type="button"><X size={18} /></button>
                 </div>
             )}
 
             <div className={collapsed ? 'lg:pl-18' : 'lg:pl-64'}>
-                <header className="sticky top-0 z-30 flex min-h-18 flex-wrap items-center justify-between gap-2 border-b border-slate-800 light:border-slate-300 bg-ink-950/95 px-4 py-2 backdrop-blur md:px-6 xl:grid xl:h-18 xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] xl:gap-3 xl:py-0">
+                <header className="sticky top-0 z-30 flex min-h-18 flex-wrap items-center justify-between gap-2 border-b border-slate-800 bg-ink-950/95 px-4 py-2 backdrop-blur md:px-6 xl:grid xl:h-18 xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] xl:gap-3 xl:py-0">
                     <div className="flex min-w-0 items-center gap-3 xl:justify-self-start">
-                        <button aria-label="Buka menu" className="rounded-lg border border-slate-800 light:border-slate-300 p-2 text-slate-400 light:text-slate-600 lg:hidden" onClick={() => setMobileOpen(true)} type="button"><Menu size={18} /></button>
+                        <button aria-label="Buka menu" className="rounded-lg border border-slate-800 p-2 text-slate-400 lg:hidden" onClick={() => setMobileOpen(true)} type="button"><Menu size={18} /></button>
                         <div className="min-w-0">
-                            <h1 className="truncate text-sm font-semibold text-white light:text-slate-900 md:text-base">{title}</h1>
-                            <p className="mt-0.5 truncate text-[10px] text-slate-500 light:text-slate-600">{subtitle}</p>
+                            <h1 className="truncate text-sm font-semibold text-white md:text-base">{title}</h1>
+                            <p className="mt-0.5 truncate text-[10px] text-slate-500">{subtitle}</p>
                         </div>
                     </div>
 
-                    <div className="order-3 flex w-full items-center justify-center gap-3 xl:order-none xl:w-auto">
-                        {(isDashboard || isCommandCentre) && (
-                            <button
-                                aria-label={isDashboard ? 'Buka Command Centre' : 'Kembali ke Dashboard Utama'}
-                                className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-cyan-200 light:text-cyan-700 shadow-[0_0_24px_rgba(39,184,255,.08)] transition hover:border-cyan-300/60 hover:bg-cyan-400/15 hover:text-white light:hover:text-cyan-900 disabled:pointer-events-none disabled:opacity-60 xl:w-auto xl:flex-none"
-                                disabled={isNavigating}
-                                onClick={() => navigateWithPullEffect(isDashboard ? '/command-centre' : '/dashboard')}
-                                type="button"
-                            >
-                                {isCommandCentre ? <ArrowLeft size={14} /> : <MonitorUp size={14} />}
-                                {isDashboard ? 'Command Centre' : 'Kembali ke Dashboard'}
-                            </button>
-                        )}
-
+                    {(isDashboard || isCommandCentre) && (
                         <button
-                            aria-label={theme === 'dark' ? 'Aktifkan light mode' : 'Aktifkan dark mode'}
-                            aria-pressed={theme === 'light'}
-                            className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-slate-700 bg-ink-800 text-slate-300 transition-colors hover:border-cyan-400 hover:text-cyan-300 light:border-slate-300 light:text-slate-600 light:hover:text-cyan-700"
-                            onClick={toggleTheme}
-                            title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+                            aria-label={isDashboard ? 'Buka Command Centre' : 'Kembali ke Dashboard Utama'}
+                            className="order-3 mx-auto flex w-full items-center justify-center gap-2 rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-cyan-200 shadow-[0_0_24px_rgba(39,184,255,.08)] transition hover:border-cyan-300/60 hover:bg-cyan-400/15 hover:text-white disabled:pointer-events-none disabled:opacity-60 xl:order-none xl:w-auto"
+                            disabled={isNavigating}
+                            onClick={() => navigateWithPullEffect(isDashboard ? '/command-centre' : '/dashboard')}
                             type="button"
                         >
-                            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                            {isCommandCentre ? <ArrowLeft size={14} /> : <MonitorUp size={14} />}
+                            {isDashboard ? 'Command Centre' : 'Kembali ke Dashboard'}
                         </button>
-                    </div>
+                    )}
 
                     <div className="flex items-center gap-2 md:gap-3 xl:justify-self-end">
-                        <div className="hidden items-center gap-2 border-r border-slate-800 light:border-slate-300 pr-3 text-[10px] text-slate-400 light:text-slate-600 sm:flex">
-                            <CloudSun size={16} className="text-cyan-400 light:text-cyan-700" />
+                        <div className="hidden items-center gap-2 border-r border-slate-800 pr-3 text-[10px] text-slate-400 sm:flex">
+                            <CloudSun size={16} className="text-cyan-400" />
                             <span>28°C · Klang</span>
                         </div>
                         <div className="hidden text-right text-[10px] 2xl:block">
-                            <p className="font-semibold tabular-nums text-slate-200 light:text-slate-800">{clock.toLocaleTimeString('ms-MY')}</p>
-                            <p className="text-slate-600 light:text-slate-500">{clock.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+                            <p className="font-semibold tabular-nums text-slate-200">{clock.toLocaleTimeString('ms-MY')}</p>
+                            <p className="text-slate-600">{clock.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
                         </div>
-                        <button aria-label="Notifikasi" className="relative rounded-lg border border-slate-800 light:border-slate-300 p-2 text-slate-400 light:text-slate-600" type="button"><Bell size={16} /><span className="absolute right-1.5 top-1.5 size-1.5 rounded-full bg-red-400" /></button>
-                        <select aria-label="Tukar persona demo" className="max-w-36 rounded-lg border border-slate-700 light:border-slate-300 bg-ink-800 px-2 py-2 text-[10px] text-slate-300 light:text-slate-700" onChange={(event) => setRole(event.target.value as UserRole)} value={role}>
+                        <button aria-label="Notifikasi" className="relative rounded-lg border border-slate-800 p-2 text-slate-400" type="button"><Bell size={16} /><span className="absolute right-1.5 top-1.5 size-1.5 rounded-full bg-red-400" /></button>
+                        <select aria-label="Tukar persona demo" className="max-w-36 rounded-lg border border-slate-700 bg-ink-800 px-2 py-2 text-[10px] text-slate-300" onChange={(event) => setRole(event.target.value as UserRole)} value={role}>
                             <option value="management">Pengurusan</option>
                             <option value="enforcement">Penguatkuasaan</option>
                             <option value="it">Pentadbir IT</option>
                         </select>
-                        <div className="hidden items-center gap-2 border-l border-slate-800 light:border-slate-300 pl-3 2xl:flex">
-                            <div className="flex size-8 items-center justify-center rounded-full bg-cyan-500/15 text-xs font-bold text-cyan-300 light:text-cyan-700">AR</div>
-                            <div className="text-[10px]"><p className="font-semibold text-slate-200 light:text-slate-800">Ahmad Razak</p><p className="text-slate-600 light:text-slate-500">{roleNames[role]}</p></div>
+                        <div className="hidden items-center gap-2 border-l border-slate-800 pl-3 2xl:flex">
+                            <div className="flex size-8 items-center justify-center rounded-full bg-cyan-500/15 text-xs font-bold text-cyan-300">AR</div>
+                            <div className="text-[10px]"><p className="font-semibold text-slate-200">Ahmad Razak</p><p className="text-slate-600">{roleNames[role]}</p></div>
                         </div>
                     </div>
                 </header>
                 <main className="p-4 md:p-6">{children}</main>
-                <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-800 light:border-slate-300 px-6 py-3 text-[9px] text-slate-600 light:text-slate-500">
-                    <span>Mockup demonstrasi · Data operasi sintetik · Peta berasaskan OpenStreetMap</span>
+                <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-800 px-6 py-3 text-[9px] text-slate-600">
+                    <span>Mockup demonstrasi · Semua data adalah sintetik</span>
                     <span className="flex items-center gap-1"><ShieldCheck size={11} />URS MBDK/SEL/ET/URS/01</span>
                 </footer>
             </div>
